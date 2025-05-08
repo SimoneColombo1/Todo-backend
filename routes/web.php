@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\TodoController;
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,3 +16,4 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('pages.home');
 });
+Route::resource('todos', TodoController::class);

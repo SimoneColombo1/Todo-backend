@@ -13,7 +13,7 @@ class TodoSeeder extends Seeder
      */
     public function run(): void
     {
-        $Todo=[
+        $Todos=[
             [
                 'title' => 'Buy groceries',
                 'description' => 'Milk, Bread, Eggs',
@@ -36,13 +36,13 @@ class TodoSeeder extends Seeder
                 'priority' => 'low',
             ],
         ];
-        foreach ($Todo as $todo) {
+        foreach ($Todos as $todoData) {
           $todo=new Todo();
-            $todo->title=$todo['title'];
-            $todo->description=$todo['description'];
-            $todo->completed=$todo['completed'];
-            $todo->due_date=$todo['due_date'];
-            $todo->priority=$todo['priority'];
+            $todo->title=$todoData['title'];
+            $todo->description=$todoData['description'];
+            $todo->completed=$todoData['completed'];
+            $todo->due_date=$todoData['due_date'];
+            $todo->priority=$todoData['priority'];
             $todo->save();
         }
     }

@@ -38,7 +38,8 @@ class TodoController extends Controller
      */
     public function show(string $id)
     {
-
+        $todo = Todo::findOrFail($id);
+        return view('pages.todos.show', compact('todo'));
     }
 
     /**

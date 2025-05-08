@@ -22,15 +22,25 @@ class TodoController extends Controller
      */
     public function create()
     {
-        //
+        $todos= new Todo();
+
+        return view('pages.todos.create', compact('todos'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store()
     {
-        //
+
+        $newTodo = new Todo();
+        $newTodo->title = request('title');
+        $newTodo->description = request('description');
+        $newTodo->completed = request('completed');
+        $newTodo->priority = request('priority');
+        $newTodo->due_date = request('due_date');
+        $newTodo->save();
+        return redirect()->route('todos.show',  $newTodo);
     }
 
     /**

@@ -11,9 +11,10 @@ class TodoController extends Controller
 
     public function index()
     {
-     $todos= Todo::all();
-     return view('pages.todos.index', compact('todos'));
+        $todos = Todo::where('user_id', auth()->id())->get();
+        return view('pages.todos.index', compact('todos'));
     }
+
 
 
     public function create()
@@ -24,36 +25,39 @@ class TodoController extends Controller
     }
 
 
-    public function store()
+    public function store(Request $request)
     {
-
         $newTodo = new Todo();
-        $newTodo->title = request('title');
-        $newTodo->description = request('description');
-        $newTodo->completed = request('completed');
-        $newTodo->priority = request('priority');
-        $newTodo->due_date = request('due_date');
+        $newTodo->title = $request->input('title');
+        $newTodo->description = $request->input('description');
+        $newTodo->completed = $request->input('completed');
+        $newTodo->priority = $request->input('priority');
+        $newTodo->due_date = $request->input('due_date');
+        $newTodo->user_id = auth()->id();  // Associa l'utente autenticato al todo
         $newTodo->save();
-        return redirect()->route('todos.show',  $newTodo);
+
+        return redirect()->route('todos.index');
     }
 
 
     public function show(string $id)
     {
-        $todo = Todo::findOrFail($id);
+        $todo = Todo::where('user_id', auth()->id())->findOrFail($id);
         return view('pages.todos.show', compact('todo'));
     }
 
+
     public function edit(Todo $todo)
     {
-
-
+        $this->authorizeOwner($todo);
         return view('pages.todos.edit', compact('todo'));
     }
 
 
+
     public function update(Request $request, Todo $todo)
     {
+        $this->authorizeOwner($todo);
         $todo->fill($request->only(['title', 'description', 'completed', 'priority', 'due_date']));
         $todo->save();
 
@@ -62,32 +66,36 @@ class TodoController extends Controller
 
 
 
+
     public function destroy(Todo $todo)
     {
-$todo->delete();
+        $this->authorizeOwner($todo);
+        $todo->delete();
+
         return redirect()->route('todos.index');
     }
 
 
-public function trashed()
+
+
+    public function trashed()
     {
-        $todos = Todo::onlyTrashed()->get();
+        $todos = Todo::onlyTrashed()->where('user_id', auth()->id())->get();
         return view('pages.todos.trashed', compact('todos'));
     }
 
+
     public function restore($id)
     {
-        $todo = Todo::onlyTrashed()->findOrFail($id);
+        $todo = Todo::onlyTrashed()->where('user_id', auth()->id())->findOrFail($id);
         $todo->restore();
 
         return redirect()->route('todos.index')->with('success', 'Todo ripristinato con successo!');
     }
+
     public function forceDestroy($id)
     {
-      
-        $todo = Todo::onlyTrashed()->findOrFail($id);
-
-
+        $todo = Todo::onlyTrashed()->where('user_id', auth()->id())->findOrFail($id);
         $todo->forceDelete();
 
         return redirect()->route('todos.trashed')->with('success', 'Todo eliminato definitivamente!');

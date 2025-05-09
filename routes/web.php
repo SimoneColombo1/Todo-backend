@@ -16,11 +16,18 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('pages.home');
 });
-Route::delete('/todos/{id}/force-delete', [TodoController::class, 'forceDestroy'])->name('todos.forceDelete');
+Auth::routes();
 
-Route::get('/todos/trashed', [TodoController::class, 'trashed'])->name('todos.trashed');
+Route::middleware('auth')->group(function () {
 
-Route::post('/todos/{id}/restore', [TodoController::class, 'restore'])->name('todos.restore');
-Route::resource('todos', TodoController::class);
+    Route::get('/todos/trashed', [TodoController::class, 'trashed'])->name('todos.trashed');
+    Route::post('/todos/{id}/restore', [TodoController::class, 'restore'])->name('todos.restore');
+Route::post('/todos/{id}/restore', [TodoController::class, 'restore'])->name('todos.restore'); Route::resource('todos', TodoController::class);});
 
 
+
+
+
+
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

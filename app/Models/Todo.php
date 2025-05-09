@@ -10,7 +10,11 @@ class Todo extends Model
 {
     use HasFactory, SoftDeletes;
     protected $table = 'todo';
-    protected $fillable = ['title', 'description', 'completed', 'priority', 'due_date'];
+    protected $fillable = ['title', 'description', 'completed', 'priority', 'due_date','user_id'];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
 
 
